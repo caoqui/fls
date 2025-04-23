@@ -135,6 +135,11 @@ const app = express();
 const port = 3000;
 
 app.get('/', async (req, res) => {
+
+    return res.send("Starting");
+});
+
+app.get('/check', async (req, res) => {
     try {
         let statusReturn = false;
         await QuestRewardNear("https://flipsidecrypto.xyz/earn/near", statusReturn);
