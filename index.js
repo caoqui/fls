@@ -139,7 +139,7 @@ app.get('/', async (req, res) => {
         let statusReturn = false;
         await QuestRewardNear("https://flipsidecrypto.xyz/earn/near", statusReturn);
         await QuestRewardAptos("https://flipsidecrypto.xyz/earn/aptos", statusReturn);
-        if (!statusReturn) {
+        if (statusReturn) {
             sendNotification("+++++LAM VIEC THOI+++++.");
         }
     } catch (error) {
@@ -148,6 +148,13 @@ app.get('/', async (req, res) => {
 
     return res.send("Called successfully!");
 });
+
+app.get('/test', async (req, res) => {
+    sendNotification("Test.")
+
+    return res.send("Test");
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
