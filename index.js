@@ -12,7 +12,7 @@ function sendNotification(message) {
     const msg = {
         message: message,
         title: "THÔNG BÁO TỪ CHECK FLIP",
-        sound: "magic",
+        sound: "echo",
         priority: 1,
     };
 
@@ -145,7 +145,9 @@ app.get('/check', async (req, res) => {
         await QuestRewardNear("https://flipsidecrypto.xyz/earn/near", statusReturn);
         await QuestRewardAptos("https://flipsidecrypto.xyz/earn/aptos", statusReturn);
         if (statusReturn) {
-            sendNotification("+++++LAM VIEC THOI+++++.");
+            setInterval(() => {
+                sendNotification("+++++LAM VIEC THOI+++++.");
+              }, 5000)
         }
     } catch (error) {
         sendNotification("----ERROR CALLING----")
