@@ -4,8 +4,8 @@ const cheerio = require('cheerio');
 const express = require('express');
 
 const pushover = new Push({
-    token: "acahusa3jfjmufof534rfk6p9o83kb", // Thay bằng API Token của bạn
-    user: "u8uqzde69vsd6q72ha2mv5nq115hr6", // Thay bằng User Key của bạn
+    token: "at5sdvoukhzitac2jhoprjrvqik7ix", // Thay bằng API Token của bạn
+    user: "uk174i5fyuj94sa6mu47ixte9uf21e", // Thay bằng User Key của bạn
 });
 
 function sendNotification(message) {
@@ -112,6 +112,7 @@ async function QuestRewardAptos(url, statusReturn) {
     }
 };
 
+
 // async function JourneysRewardAptos(url, statusReturn) {
 //     try {
 //         const response = await axios.get(url);
@@ -131,6 +132,22 @@ async function QuestRewardAptos(url, statusReturn) {
 //     }
 // };
 
+async function QuestRewardStellar(url, statusReturn) {
+    try {
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
+        $('h2').each((_, element) => {
+            const text = $(element).text().trim();
+            if (text.includes('Quests with Rewards')) {
+                sendNotification("Stellar Quest Rewards.");
+                statusReturn = true;
+            }
+        });
+    } catch (error) {
+        console.error('Lỗi khi lấy HTML:', error.message);
+    }
+};
+
 const app = express();
 const port = 3000;
 
@@ -144,6 +161,7 @@ app.get('/check', async (req, res) => {
         let statusReturn = false;
         await QuestRewardNear("https://flipsidecrypto.xyz/earn/near", statusReturn);
         await QuestRewardAptos("https://flipsidecrypto.xyz/earn/aptos", statusReturn);
+        await QuestRewardStellar("https://flipsidecrypto.xyz/earn/stellar", statusReturn);
         if (statusReturn) {
             setInterval(() => {
                 sendNotification("+++++LAM VIEC THOI+++++.");
