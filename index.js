@@ -4,8 +4,8 @@ const cheerio = require('cheerio');
 const express = require('express');
 
 const pushover = new Push({
-    token: "at5sdvoukhzitac2jhoprjrvqik7ix", // Thay bằng API Token của bạn
-    user: "uk174i5fyuj94sa6mu47ixte9uf21e", // Thay bằng User Key của bạn
+    token: "az7bxqkdx9q1bgzqtdgjkn9e19zp4v", // Thay bằng API Token của bạn
+    user: "umk649hu4c9aizzvt1ujatc9m3eaxu", // Thay bằng User Key của bạn
 });
 
 function sendNotification(message) {
@@ -25,40 +25,9 @@ function sendNotification(message) {
     });
 }
 
-
-async function QuestRewardNear(url, statusReturn) {
+async function QuestRewardNear(url) {
     try {
-        const response = await axios.get(url);
-        //   console.log(response.data);
-        const $ = cheerio.load(response.data);
-
-        // Tìm thẻ theo class chính xác
-        const questRewardNear = $('.grid.grid-cols-4.gap-6.py-6').first();
-
-        if (questRewardNear.length) {
-            const childCount = questRewardNear.children().length;
-            if (childCount > 1) {
-                sendNotification("Near Quest Reward.");
-                statusReturn = true;
-            }
-            else if (childCount > 0) {
-                const anchor = questRewardNear.children().find('a').eq(1);
-                if (anchor.text().trim().includes("Stake $BRRR for BOOSTED Rewards")) { console.log("Bo qua the Stake $BRRR for BOOSTED Rewards.") }
-                else {
-                    sendNotification("Near Quest Reward.");
-                    statusReturn = true;
-                }
-            }
-        } else {
-            console.log('Không tìm thấy thẻ Quest Near Reward.');
-        }
-    } catch (error) {
-        console.error('Lỗi khi lấy HTML:', error.message);
-    }
-}
-
-async function QuestRewardNear(url, statusReturn) {
-    try {
+        let statusReturn = false;
         const response = await axios.get(url);
         //   console.log(response.data);
         const $ = cheerio.load(response.data);
@@ -90,14 +59,15 @@ async function QuestRewardNear(url, statusReturn) {
                 statusReturn = true;
             }
         });
-
+        return statusReturn;
     } catch (error) {
         console.error('Lỗi khi lấy HTML:', error.message);
     }
 };
 
-async function QuestRewardAptos(url, statusReturn) {
+async function QuestRewardAptos(url) {
     try {
+        let statusReturn = false;
         const response = await axios.get(url);
         const $ = cheerio.load(response.data);
         $('h2').each((_, element) => {
@@ -107,30 +77,11 @@ async function QuestRewardAptos(url, statusReturn) {
                 statusReturn = true;
             }
         });
+        return statusReturn;
     } catch (error) {
         console.error('Lỗi khi lấy HTML:', error.message);
     }
 };
-
-
-// async function JourneysRewardAptos(url, statusReturn) {
-//     try {
-//         const response = await axios.get(url);
-//         console.log(response.data)
-//         const $ = cheerio.load(response.data);
-//         const element = $('.p-3.bg-muted\\/60.rounded-lg.space-y-1').first();
-//         console.log(element.length)
-//       if (element.length) {
-        
-//         console.log('✅ Tìm thấy thẻ với class "text-white":');
-//         console.log('👉 Nội dung:', element.text().trim());
-//       } else {
-//         console.log('❌ Không tìm thấy thẻ có class "text-white" trong thẻ đã chọn.');
-//       }
-//     } catch (error) {
-//         console.error('Lỗi khi lấy HTML:', error.message);
-//     }
-// };
 
 async function QuestRewardStellar(url, statusReturn) {
     try {
@@ -148,6 +99,92 @@ async function QuestRewardStellar(url, statusReturn) {
     }
 };
 
+// bỏ qua quest Lend on Blend - YieldBlox Pool 
+async function QuestRewardStellar2(url) {
+    try {
+        let statusReturn = false;
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
+        const parentDiv = $('div.grid.grid-cols-4.gap-6.py-6');
+        if (parentDiv.children().length > 2) {
+            sendNotification("Stellar Quest Rewards.");
+            statusReturn = true;
+        } else {
+            const matchText = [
+                'Lend on Blend - YieldBlox Pool',
+                'Borrow on Blend - YieldBlox V2 Pool'
+            ];
+            parentDiv.children().each((i, child) => {
+                const text = $(child).find('a').eq(1).text().trim();
+                let allMatch = true;
+                // console.log('Link text:', text);
+                if (!matchText.includes(text)) {
+                    allMatch = false; // Có ít nhất 1 cái không khớp
+                }
+                // }
+
+                if (!allMatch) {
+                    sendNotification("Stellar Quest Rewards2.");
+                    statusReturn = true;
+                }
+            });
+        }
+        return statusReturn;
+    } catch (error) {
+        console.error('Lỗi khi lấy HTML:', error);
+    }
+}
+async function CheckBalanceStellarQuestReward(url, arrayReward) {
+    try {
+        let statusReturn = false;
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
+        const parentDiv = $('ul.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.gap-3');
+
+        parentDiv.children().each((i, child) => {
+            const whiteTextEl = $(child).find('.text-white'); // tìm thẻ có class text-white bên trong child
+            const text = whiteTextEl.text().trim();
+            let allMatch = true;
+            // console.log('Link text:', text);
+            if (!arrayReward.includes(text)) {
+                allMatch = false;
+            }
+
+            if (!allMatch) {
+                sendNotification("Stellar Quest reward giam.");
+                statusReturn = true;
+            }
+        });
+
+        return statusReturn;
+    } catch (error) {
+        console.error('Lỗi khi lấy HTML:', error);
+    }
+}
+
+
+async function JourneysStellar(url) {
+    let statusReturn = false;
+    try {
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
+        const h2 = $('h2.text-3xl').filter((_, el) => {
+            return $(el).text().trim() === 'Onboarding #1 - Bridge Stablecoins to Stellar';
+        }).first();
+
+        if (!h2.length) {
+            console.log('❌ Không tìm thấy thẻ <h2> khớp nội dung');
+            return;
+        }
+
+        console.log('✅ Tìm thấy thẻ <h2>:');
+        console.log($.html(h2));
+
+    } catch (error) {
+        console.error('Lỗi khi lấy HTML:', error.message);
+    }
+};
+
 const app = express();
 const port = 3000;
 
@@ -159,16 +196,22 @@ app.get('/', async (req, res) => {
 app.get('/check', async (req, res) => {
     try {
         let statusReturn = false;
-        await QuestRewardNear("https://flipsidecrypto.xyz/earn/near", statusReturn);
-        await QuestRewardAptos("https://flipsidecrypto.xyz/earn/aptos", statusReturn);
-        await QuestRewardStellar("https://flipsidecrypto.xyz/earn/stellar", statusReturn);
+        statusReturn = await QuestRewardAptos("https://flipsidecrypto.xyz/earn/aptos");
+
+        statusReturn =await QuestRewardStellar2("https://flipsidecrypto.xyz/earn/stellar");
+        statusReturn =await QuestRewardNear("https://flipsidecrypto.xyz/earn/near");
+        statusReturn = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/lend-on-blend-yieldblox-pool", ['200 USDC', '1200 USDC', '750 USDC']);
+        statusReturn = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/borrow-on-blend-yieldblox-v2-pool", ['200 USDC', '1200 USDC', '1500 USDC']);
+
+
+        // await JourneysStellar("https://flipsidecrypto.xyz/earn/journey/stellar-onboarding", statusReturn);
         if (statusReturn) {
             setInterval(() => {
                 sendNotification("+++++LAM VIEC THOI+++++.");
               }, 5000)
         }
     } catch (error) {
-        sendNotification("----ERROR CALLING----")
+        // sendNotification("----ERROR CALLING----")
     }
 
     return res.send("Called successfully!");
@@ -182,5 +225,5 @@ app.get('/test', async (req, res) => {
 
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+    console.log(`Server is running at http://localhost:${port}`);
 });
