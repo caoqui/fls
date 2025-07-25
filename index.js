@@ -106,13 +106,15 @@ async function QuestRewardStellar2(url) {
         const response = await axios.get(url);
         const $ = cheerio.load(response.data);
         const parentDiv = $('div.grid.grid-cols-4.gap-6.py-6');
-        if (parentDiv.children().length > 2) {
+        if (parentDiv.children().length > 4) {
             sendNotification("Stellar Quest Rewards.");
             statusReturn = true;
         } else {
             const matchText = [
                 'Lend on Blend - YieldBlox Pool',
-                'Borrow on Blend - YieldBlox V2 Pool'
+                'Borrow on Blend - YieldBlox V2 Pool',
+                'Swap USDC for PHO on Phoenix',
+                'Provide Liquidity to PHO-USDC on Phoenix'
             ];
             parentDiv.children().each((i, child) => {
                 const text = $(child).find('a').eq(1).text().trim();
@@ -195,23 +197,20 @@ app.get('/', async (req, res) => {
 
 app.get('/check', async (req, res) => {
     try {
-        let statusReturn = false;
-        statusReturn = await QuestRewardAptos("https://flipsidecrypto.xyz/earn/aptos");
+        let statusReturn1 = await QuestRewardAptos("https://flipsidecrypto.xyz/earn/aptos");
+        let statusReturn2 =await QuestRewardStellar2("https://flipsidecrypto.xyz/earn/stellar");
+        let statusReturn3 =await QuestRewardNear("https://flipsidecrypto.xyz/earn/near");
+        let statusReturn4 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/lend-on-blend-yieldblox-pool", ['200 USDC', '1200 USDC', '750 USDC']);
+        let statusReturn5 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/borrow-on-blend-yieldblox-v2-pool", ['200 USDC', '1200 USDC', '1500 USDC']);
 
-        statusReturn =await QuestRewardStellar2("https://flipsidecrypto.xyz/earn/stellar");
-        statusReturn =await QuestRewardNear("https://flipsidecrypto.xyz/earn/near");
-        statusReturn = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/lend-on-blend-yieldblox-pool", ['200 USDC', '1200 USDC', '750 USDC']);
-        statusReturn = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/borrow-on-blend-yieldblox-v2-pool", ['200 USDC', '1200 USDC', '1500 USDC']);
-
-
-        // await JourneysStellar("https://flipsidecrypto.xyz/earn/journey/stellar-onboarding", statusReturn);
-        if (statusReturn) {
+        if (statusReturn1 || statusReturn2 || statusReturn3||statusReturn4||statusReturn5) {
             setInterval(() => {
                 sendNotification("+++++LAM VIEC THOI+++++.");
               }, 5000)
         }
     } catch (error) {
-        // sendNotification("----ERROR CALLING----")
+        sendNotification("----ERROR CALLING----")
+        console.log(error)
     }
 
     return res.send("Called successfully!");
