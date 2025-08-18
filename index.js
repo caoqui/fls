@@ -202,8 +202,9 @@ app.get('/check', async (req, res) => {
         let statusReturn3 =await QuestRewardNear("https://flipsidecrypto.xyz/earn/near");
         let statusReturn4 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/lend-on-blend-yieldblox-pool", ['200 USDC', '1200 USDC', '750 USDC']);
         let statusReturn5 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/borrow-on-blend-yieldblox-v2-pool", ['200 USDC', '1200 USDC', '1500 USDC']);
+        let statusReturn6 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/swap-usdc-for-pho-on-phoenix", ['100 USDC', '0 USDC', '80.4979816538 USDC']);
 
-        if (statusReturn1 || statusReturn2 || statusReturn3||statusReturn4||statusReturn5) {
+        if (statusReturn1 || statusReturn2 || statusReturn3||statusReturn4||statusReturn5||statusReturn6) {
             setInterval(() => {
                 sendNotification("+++++LAM VIEC THOI+++++.");
               }, 5000)
