@@ -4,8 +4,8 @@ const cheerio = require('cheerio');
 const express = require('express');
 
 const pushover = new Push({
-    token: "az7bxqkdx9q1bgzqtdgjkn9e19zp4v", // Thay bằng API Token của bạn
-    user: "umk649hu4c9aizzvt1ujatc9m3eaxu", // Thay bằng User Key của bạn
+    token: "a6h3i9ebyvi6gzjzwi3t9otravq3eb", // Thay bằng API Token của bạn
+    user: "umzzgn8iwdixnwarx1978ssq1ym3q7", // Thay bằng User Key của bạn
 });
 
 function sendNotification(message) {
@@ -111,10 +111,10 @@ async function QuestRewardStellar2(url) {
             statusReturn = true;
         } else {
             const matchText = [
-                'Lend on Blend - YieldBlox Pool',
-                'Borrow on Blend - YieldBlox V2 Pool',
-                'Swap USDC for PHO on Phoenix',
-                'Provide Liquidity to PHO-USDC on Phoenix'
+                // 'Lend on Blend - YieldBlox Pool',
+                // 'Borrow on Blend - YieldBlox V2 Pool',
+                // 'Swap USDC for PHO on Phoenix',
+                // 'Provide Liquidity to PHO-USDC on Phoenix'
             ];
             parentDiv.children().each((i, child) => {
                 const text = $(child).find('a').eq(1).text().trim();
@@ -197,15 +197,15 @@ app.get('/', async (req, res) => {
 
 app.get('/check', async (req, res) => {
     try {
-        let statusReturn1 = await QuestRewardAptos("https://flipsidecrypto.xyz/earn/aptos");
+        // let statusReturn1 = await QuestRewardAptos("https://flipsidecrypto.xyz/earn/aptos");
         let statusReturn2 =await QuestRewardStellar2("https://flipsidecrypto.xyz/earn/stellar");
-        let statusReturn3 =await QuestRewardNear("https://flipsidecrypto.xyz/earn/near");
-        let statusReturn4 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/lend-on-blend-yieldblox-pool", ['200 USDC', '1200 USDC', '750 USDC']);
-        let statusReturn5 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/borrow-on-blend-yieldblox-v2-pool", ['200 USDC', '1200 USDC', '1500 USDC']);
-        let statusReturn6 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/swap-usdc-for-pho-on-phoenix", ['100 USDC', '0 USDC', '0 USDC']);
-        let statusReturn7 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/provide-liquidity-to-pho-usdc-on-phoenix", ['100 USDC', '0 USDC', '0 USDC']);
+        // let statusReturn3 =await QuestRewardNear("https://flipsidecrypto.xyz/earn/near");
+        // let statusReturn4 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/lend-on-blend-yieldblox-pool", ['200 USDC', '1200 USDC', '750 USDC']);
+        // let statusReturn5 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/borrow-on-blend-yieldblox-v2-pool", ['200 USDC', '1200 USDC', '1500 USDC']);
+        // let statusReturn6 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/swap-usdc-for-pho-on-phoenix", ['100 USDC', '0 USDC', '0 USDC']);
+        // let statusReturn7 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/provide-liquidity-to-pho-usdc-on-phoenix", ['100 USDC', '0 USDC', '0 USDC']);
 
-        if (statusReturn1 || statusReturn2 || statusReturn3||statusReturn4||statusReturn5||statusReturn6||statusReturn7) {
+        if (statusReturn2) {
             setInterval(() => {
                 sendNotification("+++++LAM VIEC THOI+++++.");
               }, 5000)
