@@ -4,8 +4,8 @@ const cheerio = require('cheerio');
 const express = require('express');
 
 const pushover = new Push({
-    token: "atro6g36tgv7ek9u7wh3tyr1h77bk2", // Thay bằng API Token của bạn
-    user: "udepwd2q48g81u7kot2ivw549c9k54", // Thay bằng User Key của bạn
+    token: "a84xdxau1avof26pb5q2p36njttgdo", // Thay bằng API Token của bạn
+    user: "u3wmm7ckye2x144iufwfqsmv4zwpwq", // Thay bằng User Key của bạn
 });
 
 function sendNotification(message) {
