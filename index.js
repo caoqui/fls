@@ -2,10 +2,10 @@ const Push = require("pushover-notifications");
 const axios = require('axios');
 const cheerio = require('cheerio');
 const express = require('express');
-
+const  fs = require("fs");
 const pushover = new Push({
-    token: "a84xdxau1avof26pb5q2p36njttgdo", // Thay bằng API Token của bạn
-    user: "u3wmm7ckye2x144iufwfqsmv4zwpwq", // Thay bằng User Key của bạn
+    token: "axnnx1xhkxxigdaii2ocyqyy52rhve", // Thay bằng API Token của bạn
+    user: "u8vhyd7p2jcku9rg9zuxbcrsbnu7if", // Thay bằng User Key của bạn
 });
 
 function sendNotification(message) {
@@ -195,20 +195,39 @@ async function CheckBalanceBobaQuestReward(url, arrayReward) {
 
 // need to fix
 async function JourneysBoba(url) {
-    let statusReturn = false;
     try {
         const response = await axios.get(url);
+        try {
+            const response = await axios.get(url);
+    
+            // Lưu toàn bộ response HTML vào t.txt
+            fs.writeFileSync("t.txt", response.data, "utf-8");
+    
+            console.log("Đã lưu thành công vào t.txt");
+        } catch (err) {
+            console.error("Lỗi:", err.message);
+        }
         const $ = cheerio.load(response.data);
-        const parentDiv = $("ul.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.gap-3");
-        console.log(parentDiv)
-        parentDiv.children().each((i, child) => {
-            console.log(1)
-        }) 
 
-    } catch (error) {
-        console.error('Lỗi khi lấy HTML:', error);
+        // 1. Tìm ul chứa các reward
+        const rewardItems = $('ul.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.gap-3 > div');
+
+        let remainingBOBA = [];
+
+        rewardItems.each((i, el) => {
+            // Tìm span.text-white bên trong từng reward
+            const value = $(el).find("span.text-white").text().trim();
+            if (value) {
+                remainingBOBA.push(value);
+            }
+        });
+        console.log("remainingBOBA: ", remainingBOBA)
+
+    } catch (err) {
+        console.error("Error getRewardsBoba:", err);
+        return null;
     }
-};
+}
 async function QuestRewardBoba2(url) {
     try {
         let statusReturn = false;
@@ -223,6 +242,8 @@ async function QuestRewardBoba2(url) {
                 'Bridge from Base to Boba via Symbiosis',
                 'Deposit ETH with RubyScore',
                 'Open position on Lynx - BOBA',
+                'BobaDaily RewardsTry MetaSoccer on Boba20 days left',
+                'BobaDaily RewardsBridge USDT from Arbitrum to Boba20 days left'
             ];
             parentDiv.children().each((i, child) => {
                 const text = $(child).find('a').eq(1).text().trim();
@@ -230,6 +251,7 @@ async function QuestRewardBoba2(url) {
                 // console.log('Link text:', text);
                 if (!matchText.includes(text)) {
                     allMatch = false; // Có ít nhất 1 cái không khớp
+                    console.log("text: ", text, ' |||')
                 }
                 // }
 
@@ -284,9 +306,9 @@ app.get('/check', async (req, res) => {
         // let statusReturn6 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/swap-usdc-for-pho-on-phoenix", ['100 USDC', '0 USDC', '0 USDC']);
         // let statusReturn7 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/provide-liquidity-to-pho-usdc-on-phoenix", ['100 USDC', '0 USDC', '0 USDC']);
 
-        let statusReturn8 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/open-position-on-lynx-lvkqhn", ['0 BOBA', '5547.9732197094 BOBA', '0 BOBA']);
-        let statusReturn9 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/deposit-eth-with-rubyscore", ['0 BOBA', '1154.3756858666 BOBA', '0 BOBA']);
-        // let statusReturn10 = await JourneysBoba("https://flipsidecrypto.xyz/earn/journey/boba-bridge-lp-journey-d3bCh");
+        let statusReturn8 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/open-position-on-lynx-lvkqhn", ['0 BOBA', '0 BOBA', '0 BOBA']);
+        let statusReturn9 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/deposit-eth-with-rubyscore", ['0 BOBA', '0 BOBA', '0 BOBA']);
+        // let statusReturn11 = await JourneysBoba("https://flipsidecrypto.xyz/earn/journey/boba-bridge-lp-journey-d3bCh");
         let statusReturn10 = await QuestRewardBoba2("https://flipsidecrypto.xyz/earn/boba");
 
         if (statusReturn2 || statusReturn3 || statusReturn8 || statusReturn9 || statusReturn10) {
