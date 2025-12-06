@@ -242,8 +242,8 @@ async function QuestRewardBoba2(url) {
                 'Bridge from Base to Boba via Symbiosis',
                 'Deposit ETH with RubyScore',
                 'Open position on Lynx - BOBA',
-                'BobaDaily RewardsTry MetaSoccer on Boba20 days left',
-                'BobaDaily RewardsBridge USDT from Arbitrum to Boba20 days left'
+                'BobaDaily RewardsTry MetaSoccer on Boba',
+                'BobaDaily RewardsBridge USDT from Arbitrum to Boba'
             ];
             parentDiv.children().each((i, child) => {
                 const text = $(child).find('a').eq(1).text().trim();
@@ -251,6 +251,7 @@ async function QuestRewardBoba2(url) {
                 // console.log('Link text:', text);
                 if (!matchText.includes(text)) {
                     allMatch = false; // Có ít nhất 1 cái không khớp
+                    if (text.includes("BobaDaily RewardsTry MetaSoccer on Boba")||text.includes("BobaDaily RewardsBridge USDT from Arbitrum to Boba") ) allMatch = true;
                     console.log("text: ", text, ' |||')
                 }
                 // }
@@ -300,7 +301,7 @@ app.get('/check', async (req, res) => {
     try {
         // let statusReturn1 = await QuestRewardAptos("https://flipsidecrypto.xyz/earn/aptos");
         let statusReturn2 = await QuestRewardStellar2("https://flipsidecrypto.xyz/earn/stellar");
-        let statusReturn3 = await QuestRewardNear("https://flipsidecrypto.xyz/earn/near");
+        // let statusReturn3 = await QuestRewardNear("https://flipsidecrypto.xyz/earn/near");
         // let statusReturn4 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/lend-on-blend-yieldblox-pool", ['200 USDC', '1200 USDC', '750 USDC']);
         // let statusReturn5 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/borrow-on-blend-yieldblox-v2-pool", ['200 USDC', '1200 USDC', '1500 USDC']);
         // let statusReturn6 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/swap-usdc-for-pho-on-phoenix", ['100 USDC', '0 USDC', '0 USDC']);
@@ -310,8 +311,8 @@ app.get('/check', async (req, res) => {
         let statusReturn9 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/deposit-eth-with-rubyscore", ['0 BOBA', '0 BOBA', '0 BOBA']);
         // let statusReturn11 = await JourneysBoba("https://flipsidecrypto.xyz/earn/journey/boba-bridge-lp-journey-d3bCh");
         let statusReturn10 = await QuestRewardBoba2("https://flipsidecrypto.xyz/earn/boba");
-
-        if (statusReturn2 || statusReturn3 || statusReturn8 || statusReturn9 || statusReturn10) {
+        console.log(statusReturn2, statusReturn8,statusReturn9, statusReturn10)
+        if (statusReturn2  || statusReturn8 || statusReturn9 || statusReturn10) {
             setInterval(() => {
                 sendNotification("+++++LAM VIEC THOI+++++.");
             }, 5000)
