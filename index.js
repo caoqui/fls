@@ -291,7 +291,21 @@ async function JourneysStellar(url) {
 
 const app = express();
 const port = 3000;
-
+async function JourneysBobaByAPI(url) {
+    let statusReturn = false;
+    try {
+      const res = await axios.get(url);
+        const listReward = res.data.result.data.json.rewardSpecs;
+        for (const reward of listReward) {
+            if ((Number(reward.tokenAllocated) - Number(reward.tokenSpent)) > 3000) {
+                statusReturn = true;
+            }
+        }
+        return statusReturn;
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
 app.get('/', async (req, res) => {
 
     return res.send("Starting");
@@ -299,25 +313,26 @@ app.get('/', async (req, res) => {
 
 app.get('/check', async (req, res) => {
     try {
-        // let statusReturn1 = await QuestRewardAptos("https://flipsidecrypto.xyz/earn/aptos");
         let statusReturn2 = await QuestRewardStellar2("https://flipsidecrypto.xyz/earn/stellar");
-        // let statusReturn3 = await QuestRewardNear("https://flipsidecrypto.xyz/earn/near");
-        // let statusReturn4 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/lend-on-blend-yieldblox-pool", ['200 USDC', '1200 USDC', '750 USDC']);
-        // let statusReturn5 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/borrow-on-blend-yieldblox-v2-pool", ['200 USDC', '1200 USDC', '1500 USDC']);
-        // let statusReturn6 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/swap-usdc-for-pho-on-phoenix", ['100 USDC', '0 USDC', '0 USDC']);
-        // let statusReturn7 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/provide-liquidity-to-pho-usdc-on-phoenix", ['100 USDC', '0 USDC', '0 USDC']);
+        // // let statusReturn4 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/lend-on-blend-yieldblox-pool", ['200 USDC', '1200 USDC', '750 USDC']);
+        // // let statusReturn5 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/borrow-on-blend-yieldblox-v2-pool", ['200 USDC', '1200 USDC', '1500 USDC']);
+        // // let statusReturn6 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/swap-usdc-for-pho-on-phoenix", ['100 USDC', '0 USDC', '0 USDC']);
+        // // let statusReturn7 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/provide-liquidity-to-pho-usdc-on-phoenix", ['100 USDC', '0 USDC', '0 USDC']);
 
         let statusReturn8 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/open-position-on-lynx-lvkqhn", ['0 BOBA', '0 BOBA', '0 BOBA']);
         let statusReturn9 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/deposit-eth-with-rubyscore", ['0 BOBA', '0 BOBA', '0 BOBA']);
-        // let statusReturn11 = await JourneysBoba("https://flipsidecrypto.xyz/earn/journey/boba-bridge-lp-journey-d3bCh");
+        // // let statusReturn11 = await JourneysBoba("https://flipsidecrypto.xyz/earn/journey/boba-bridge-lp-journey-d3bCh");
         let statusReturn10 = await QuestRewardBoba2("https://flipsidecrypto.xyz/earn/boba");
-        console.log(statusReturn2, statusReturn8,statusReturn9, statusReturn10)
-        if (statusReturn2  || statusReturn8 || statusReturn9 || statusReturn10) {
+        let statusReturn12 = await JourneysBobaByAPI("https://flipsidecrypto.xyz/earn/trpc/public.quests.bySlug?input=%7B%22json%22%3A%7B%22slug%22%3A%22bridge-stables-from-base-to-boba%22%7D%7D");
+        let statusReturn13 = await JourneysBobaByAPI("https://flipsidecrypto.xyz/earn/trpc/public.quests.bySlug?input=%7B%22json%22%3A%7B%22slug%22%3A%22lp-on-toaster-finance%22%7D%7D");
+        if (statusReturn2  || statusReturn8 || statusReturn9 || statusReturn10|| statusReturn12 || statusReturn13) {
             setInterval(() => {
                 sendNotification("+++++LAM VIEC THOI+++++.");
             }, 5000)
             console.log("RUNING...")
         }
+
+
     } catch (error) {
         sendNotification("----ERROR CALLING----")
         console.log(error)
