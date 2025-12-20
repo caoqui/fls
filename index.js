@@ -4,8 +4,8 @@ const cheerio = require('cheerio');
 const express = require('express');
 const  fs = require("fs");
 const pushover = new Push({
-    token: "axnnx1xhkxxigdaii2ocyqyy52rhve", // Thay bằng API Token của bạn
-    user: "u8vhyd7p2jcku9rg9zuxbcrsbnu7if", // Thay bằng User Key của bạn
+    token: "ak9p34o9vqqt8d3g18uci77ft19i3h", // Thay bằng API Token của bạn
+    user: "u5a4ab82djno76rb6psigw264faqj1", // Thay bằng User Key của bạn
 });
 
 function sendNotification(message) {
@@ -177,7 +177,7 @@ async function CheckBalanceBobaQuestReward(url, arrayReward) {
             let allMatch = true;
             // console.log('Link text:', text);
             if (!arrayReward.includes(text)) {
-                if (text == "4000 BOBA" || text == "6000 BOBA" || Number(text.split(" ")[0]) > 6000)
+                if (text == "4000 BOBA" || text == "6000 BOBA" || Number(text.split(" ")[0]) > 100)
                     allMatch = false;
             }
 
@@ -242,8 +242,8 @@ async function QuestRewardBoba2(url) {
                 'Bridge from Base to Boba via Symbiosis',
                 'Deposit ETH with RubyScore',
                 'Open position on Lynx - BOBA',
-                'BobaDaily RewardsTry MetaSoccer on Boba',
-                'BobaDaily RewardsBridge USDT from Arbitrum to Boba'
+                'Try MetaSoccer on Boba',
+                'Bridge USDT from Arbitrum to Boba'
             ];
             parentDiv.children().each((i, child) => {
                 const text = $(child).find('a').eq(1).text().trim();
@@ -251,7 +251,7 @@ async function QuestRewardBoba2(url) {
                 // console.log('Link text:', text);
                 if (!matchText.includes(text)) {
                     allMatch = false; // Có ít nhất 1 cái không khớp
-                    if (text.includes("BobaDaily RewardsTry MetaSoccer on Boba")||text.includes("BobaDaily RewardsBridge USDT from Arbitrum to Boba") ) allMatch = true;
+                    if (text.includes("Try MetaSoccer on Boba")||text.includes("Bridge USDT from Arbitrum to Boba") ) allMatch = true;
                     console.log("text: ", text, ' |||')
                 }
                 // }
@@ -321,11 +321,12 @@ app.get('/check', async (req, res) => {
 
         let statusReturn8 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/open-position-on-lynx-lvkqhn", ['0 BOBA', '0 BOBA', '0 BOBA']);
         let statusReturn9 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/deposit-eth-with-rubyscore", ['0 BOBA', '0 BOBA', '0 BOBA']);
+        let statusReturn14 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/bridge-usdt-from-arbitrum-to-boba", ['0 BOBA', '0 BOBA', '0 BOBA']);
         // // let statusReturn11 = await JourneysBoba("https://flipsidecrypto.xyz/earn/journey/boba-bridge-lp-journey-d3bCh");
         let statusReturn10 = await QuestRewardBoba2("https://flipsidecrypto.xyz/earn/boba");
-        let statusReturn12 = await JourneysBobaByAPI("https://flipsidecrypto.xyz/earn/trpc/public.quests.bySlug?input=%7B%22json%22%3A%7B%22slug%22%3A%22bridge-stables-from-base-to-boba%22%7D%7D");
-        let statusReturn13 = await JourneysBobaByAPI("https://flipsidecrypto.xyz/earn/trpc/public.quests.bySlug?input=%7B%22json%22%3A%7B%22slug%22%3A%22lp-on-toaster-finance%22%7D%7D");
-        if (statusReturn2  || statusReturn8 || statusReturn9 || statusReturn10|| statusReturn12 || statusReturn13) {
+        // let statusReturn12 = await JourneysBobaByAPI("https://flipsidecrypto.xyz/earn/trpc/public.quests.bySlug?input=%7B%22json%22%3A%7B%22slug%22%3A%22bridge-stables-from-base-to-boba%22%7D%7D");
+        // let statusReturn13 = await JourneysBobaByAPI("https://flipsidecrypto.xyz/earn/trpc/public.quests.bySlug?input=%7B%22json%22%3A%7B%22slug%22%3A%22lp-on-toaster-finance%22%7D%7D");
+        if (statusReturn2  || statusReturn8 || statusReturn9 || statusReturn10|| statusReturn14) {
             setInterval(() => {
                 sendNotification("+++++LAM VIEC THOI+++++.");
             }, 5000)
