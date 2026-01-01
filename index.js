@@ -240,9 +240,9 @@ async function QuestRewardBoba2(url) {
         } else {
             const matchText = [
                 'Bridge from Base to Boba via Symbiosis',
-                'Deposit ETH with RubyScore',
-                'Open position on Lynx - BOBA',
-                'Try MetaSoccer on Boba',
+                // 'Deposit ETH with RubyScore',
+                // 'Open position on Lynx - BOBA',
+                // 'Try MetaSoccer on Boba',
                 'Bridge USDT from Arbitrum to Boba'
             ];
             parentDiv.children().each((i, child) => {
@@ -320,14 +320,14 @@ app.get('/check', async (req, res) => {
         // // let statusReturn7 = await CheckBalanceStellarQuestReward("https://flipsidecrypto.xyz/earn/quest/provide-liquidity-to-pho-usdc-on-phoenix", ['100 USDC', '0 USDC', '0 USDC']);
 
         // let statusReturn8 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/open-position-on-lynx-lvkqhn", ['0 BOBA', '0 BOBA', '0 BOBA']);
-        let statusReturn9 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/deposit-eth-with-rubyscore", ['0 BOBA', '0 BOBA', '0 BOBA']);
+        // let statusReturn9 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/deposit-eth-with-rubyscore", ['0 BOBA', '0 BOBA', '0 BOBA']);
         let statusReturn14 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/bridge-usdt-from-arbitrum-to-boba", ['0 BOBA', '0 BOBA', '0 BOBA']);
         // // let statusReturn11 = await JourneysBoba("https://flipsidecrypto.xyz/earn/journey/boba-bridge-lp-journey-d3bCh");
         let statusReturn10 = await QuestRewardBoba2("https://flipsidecrypto.xyz/earn/boba");
         // let statusReturn12 = await JourneysBobaByAPI("https://flipsidecrypto.xyz/earn/trpc/public.quests.bySlug?input=%7B%22json%22%3A%7B%22slug%22%3A%22bridge-stables-from-base-to-boba%22%7D%7D");
         // let statusReturn13 = await JourneysBobaByAPI("https://flipsidecrypto.xyz/earn/trpc/public.quests.bySlug?input=%7B%22json%22%3A%7B%22slug%22%3A%22lp-on-toaster-finance%22%7D%7D");
         // if (statusReturn2  || statusReturn8 || statusReturn9 || statusReturn10|| statusReturn14) {
-            if (statusReturn2  || statusReturn9 || statusReturn10) {
+            if (statusReturn2  || statusReturn10) {
             setInterval(() => {
                 sendNotification("+++++LAM VIEC THOI+++++.");
             }, 5000)
