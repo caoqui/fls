@@ -228,6 +228,7 @@ async function JourneysBoba(url) {
         return null;
     }
 }
+
 async function QuestRewardBoba2(url) {
     try {
         let statusReturn = false;
@@ -253,6 +254,43 @@ async function QuestRewardBoba2(url) {
                     allMatch = false; // Có ít nhất 1 cái không khớp
                     if (text.includes("Try MetaSoccer on Boba")||text.includes("Bridge USDT from Arbitrum to Boba") ) allMatch = true;
                     console.log("text: ", text, ' |||')
+                }
+                // }
+
+                if (!allMatch) {
+                    sendNotification("Stellar Quest Rewards2.");
+                    statusReturn = true;
+                }
+            });
+        }
+        return statusReturn;
+    } catch (error) {
+        console.error('Lỗi khi lấy HTML:', error);
+    }
+}
+async function TFunctionCheckNews(url) {
+    try {
+        let statusReturn = false;
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
+        const parentDiv = $('div.grid.grid-cols-4.gap-6.py-6');
+        if (parentDiv.children().length > 4) {
+            sendNotification("Boba Quest Rewards.");
+            statusReturn = true;
+        } else {
+            const matchText = [
+                // 'Deposit ETH with RubyScore',
+                // 'Open position on Lynx - BOBA',
+                // 'Try MetaSoccer on Boba',
+            ];
+            parentDiv.children().each((i, child) => {
+                const text = $(child).find('a').eq(1).text().trim();
+                let allMatch = true;
+                // console.log('Link text:', text);
+                if (!matchText.includes(text)) {
+                    allMatch = false; // Có ít nhất 1 cái không khớp
+                    // if (text.includes("Try MetaSoccer on Boba")||text.includes("Bridge USDT from Arbitrum to Boba") ) allMatch = true;
+                    // console.log("text: ", text, ' |||')
                 }
                 // }
 
@@ -324,10 +362,11 @@ app.get('/check', async (req, res) => {
         let statusReturn14 = await CheckBalanceBobaQuestReward("https://flipsidecrypto.xyz/earn/quest/bridge-usdt-from-arbitrum-to-boba", ['0 BOBA', '0 BOBA', '0 BOBA']);
         // // let statusReturn11 = await JourneysBoba("https://flipsidecrypto.xyz/earn/journey/boba-bridge-lp-journey-d3bCh");
         let statusReturn10 = await QuestRewardBoba2("https://flipsidecrypto.xyz/earn/boba");
+        let statusReturn11 = await TFunctionCheckNews("https://flipsidecrypto.xyz/earn/");
         // let statusReturn12 = await JourneysBobaByAPI("https://flipsidecrypto.xyz/earn/trpc/public.quests.bySlug?input=%7B%22json%22%3A%7B%22slug%22%3A%22bridge-stables-from-base-to-boba%22%7D%7D");
         // let statusReturn13 = await JourneysBobaByAPI("https://flipsidecrypto.xyz/earn/trpc/public.quests.bySlug?input=%7B%22json%22%3A%7B%22slug%22%3A%22lp-on-toaster-finance%22%7D%7D");
         // if (statusReturn2  || statusReturn8 || statusReturn9 || statusReturn10|| statusReturn14) {
-            if (statusReturn2  || statusReturn10) {
+            if (statusReturn2  || statusReturn10||statusReturn11) {
             setInterval(() => {
                 sendNotification("+++++LAM VIEC THOI+++++.");
             }, 5000)
